@@ -1,8 +1,33 @@
+"use client";
+
 import Link from "next/link";
 import { Button } from "@/components/ui/Button";
-import { Users, Shield, Shuffle } from "lucide-react";
+import { Users, Shield, Shuffle, Play, Trash2 } from "lucide-react";
+import { useTournamentStore } from "@/store/useTournamentStore";
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 
 export default function Home() {
+  const router = useRouter();
+  const { matches, pairs, resetTournament } = useTournamentStore();
+  const [hasActiveTournament, setHasActiveTournament] = useState(false);
+
+  useEffect(() => {
+    // Hydration fix: check store after mount
+    setHasActiveTournament(matches.length > 0 || pairs.length > 0);
+  }, [matches, pairs]);
+
+  const handleStartNew = (href: string) => {
+    if (hasActiveTournament) {
+      if (confirm("Starting a new tournament will erase the current one. Are you sure?")) {
+        resetTournament();
+        router.push(href);
+      }
+    } else {
+      router.push(href);
+    }
+  };
+
   return (
     <main className="flex min-h-screen flex-col items-center justify-center bg-slate-950 p-4 text-slate-50">
       <div className="w-full max-w-md space-y-8 text-center">
@@ -14,6 +39,28 @@ export default function Home() {
             Organize your tournaments with ease.
           </p>
         </div>
+
+        {hasActiveTournament && (
+          <div className="rounded-lg border border-emerald-500/50 bg-emerald-950/30 p-4">
+            <h3 className="mb-2 font-semibold text-emerald-400">Active Tournament Found</h3>
+            <div className="flex gap-2">
+              <Link href="/tournament" className="flex-1">
+                <Button className="w-full bg-emerald-600 hover:bg-emerald-700">
+                  <Play className="mr-2 h-4 w-4" /> Continue
+                </Button>
+              </Link>
+              <Button
+                variant="destructive"
+                size="icon"
+                onClick={() => {
+                  if (confirm("Delete current tournament?")) resetTournament();
+                }}
+              >
+                <Trash2 className="h-4 w-4" />
+              </Button>
+            </div>
+          </div>
+        )}
 
         <div className="grid gap-4">
           <Link href="/players" className="w-full">
@@ -35,34 +82,32 @@ export default function Home() {
             </div>
             <div className="relative flex justify-center text-xs uppercase">
               <span className="bg-slate-950 px-2 text-slate-500">
-                Start Tournament
+                Start New Tournament
               </span>
             </div>
           </div>
 
-          <Link href="/captains" className="w-full">
-            <Button
-              className="h-auto w-full flex-col gap-2 bg-gradient-to-br from-indigo-500 to-purple-600 p-6 hover:from-indigo-600 hover:to-purple-700"
-            >
-              <Shield className="h-8 w-8" />
-              <span className="text-lg font-semibold">Captains Mode</span>
-              <span className="text-xs opacity-80">
-                Captains draft their teams
-              </span>
-            </Button>
-          </Link>
+          <Button
+            className="h-auto w-full flex-col gap-2 bg-gradient-to-br from-indigo-500 to-purple-600 p-6 hover:from-indigo-600 hover:to-purple-700"
+            onClick={() => handleStartNew("/captains")}
+          >
+            <Shield className="h-8 w-8" />
+            <span className="text-lg font-semibold">Captains Mode</span>
+            <span className="text-xs opacity-80">
+              Captains draft their teams
+            </span>
+          </Button>
 
-          <Link href="/balanced" className="w-full">
-            <Button
-              className="h-auto w-full flex-col gap-2 bg-gradient-to-br from-emerald-500 to-teal-600 p-6 hover:from-emerald-600 hover:to-teal-700"
-            >
-              <Shuffle className="h-8 w-8" />
-              <span className="text-lg font-semibold">Balanced Mode</span>
-              <span className="text-xs opacity-80">
-                Top players paired with others
-              </span>
-            </Button>
-          </Link>
+          <Button
+            className="h-auto w-full flex-col gap-2 bg-gradient-to-br from-emerald-500 to-teal-600 p-6 hover:from-emerald-600 hover:to-teal-700"
+            onClick={() => handleStartNew("/balanced")}
+          >
+            <Shuffle className="h-8 w-8" />
+            <span className="text-lg font-semibold">Balanced Mode</span>
+            <span className="text-xs opacity-80">
+              Top players paired with others
+            </span>
+          </Button>
         </div>
       </div>
     </main>

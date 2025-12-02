@@ -2,19 +2,24 @@
 
 import { useState } from "react";
 import { usePlayerStore, Player } from "@/store/usePlayerStore";
+import { useTournamentStore, Pair } from "@/store/useTournamentStore";
 import { Button } from "@/components/ui/Button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/Card";
+import { Card, CardHeader, CardTitle } from "@/components/ui/Card";
 import { Check, Star, User } from "lucide-react";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
-type Phase = "select-top" | "result";
+type Step = "select-top" | "result";
 
 export default function BalancedPage() {
+    const router = useRouter();
     const { players } = usePlayerStore();
-    const [phase, setPhase] = useState<Phase>("select-top");
+    const { startTournament } = useTournamentStore();
+
+    const [step, setStep] = useState<Step>("select-top");
     const [topPlayers, setTopPlayers] = useState<Player[]>([]);
-    const [pairs, setPairs] = useState<[Player, Player][]>([]);
+    const [pairs, setPairs] = useState<Pair[]>([]);
 
     const requiredTopCount = Math.ceil(players.length / 2);
 
@@ -37,45 +42,32 @@ export default function BalancedPage() {
         const shuffledTop = [...topPlayers].sort(() => Math.random() - 0.5);
         const shuffledBottom = [...bottomPlayers].sort(() => Math.random() - 0.5);
 
-        const newPairs: [Player, Player][] = [];
+        const newPairs: Pair[] = [];
 
         // Pair top with bottom
-        // Note: If odd number of players, one group will be larger.
-        // Logic: Pair 1 Top with 1 Bottom until one runs out.
-        // If we have extra Top players (e.g. 7 top, 5 bottom), 2 top will play together?
-        // Or if we have extra Bottom players.
-        // The requirement says "50% top, 50% bottom".
-        // If 12 players, 6 top, 6 bottom -> 6 pairs.
-        // If 13 players? 7 top, 6 bottom?
-        // Let's assume we just pair them up.
-
-        // We will iterate through the larger list to ensure everyone is paired if possible,
-        // but strictly we want Top-Bottom pairs.
-        // Any remainders will have to pair with each other.
-
-        // Let's just pair index by index for now, assuming user selected half.
-
-        const maxLen = Math.max(shuffledTop.length, shuffledBottom.length);
-
-        // Actually, let's just pop from lists.
         const tempTop = [...shuffledTop];
         const tempBottom = [...shuffledBottom];
 
         while (tempTop.length > 0 && tempBottom.length > 0) {
-            newPairs.push([tempTop.pop()!, tempBottom.pop()!]);
+            newPairs.push({
+                id: Math.random().toString(36).substring(7),
+                player1: tempTop.pop()!,
+                player2: tempBottom.pop()!
+            });
         }
 
         // Handle remainders (if any)
         const remainders = [...tempTop, ...tempBottom];
         while (remainders.length >= 2) {
-            newPairs.push([remainders.pop()!, remainders.pop()!]);
+            newPairs.push({
+                id: Math.random().toString(36).substring(7),
+                player1: remainders.pop()!,
+                player2: remainders.pop()!
+            });
         }
 
-        // If one player left alone?
-        // They sit out or we show them as "Waiting".
-
         setPairs(newPairs);
-        setPhase("result");
+        setStep("result");
     };
 
     if (players.length < 4) {
@@ -97,8 +89,8 @@ export default function BalancedPage() {
             <div className="mx-auto max-w-md space-y-6">
                 <div className="flex items-center justify-between">
                     <h1 className="text-xl font-bold text-slate-900">
-                        {phase === "select-top" && `Select Top ${requiredTopCount} Players`}
-                        {phase === "result" && "Balanced Pairs"}
+                        {step === "select-top" && `Select Top ${requiredTopCount} Players`}
+                        {step === "result" && "Balanced Pairs"}
                     </h1>
                     <Link href="/">
                         <Button variant="ghost" size="sm">
@@ -107,7 +99,7 @@ export default function BalancedPage() {
                     </Link>
                 </div>
 
-                {phase === "select-top" && (
+                {step === "select-top" && (
                     <>
                         <p className="text-sm text-slate-500">
                             Select the best players. They will be paired with the others.
@@ -147,34 +139,43 @@ export default function BalancedPage() {
                     </>
                 )}
 
-                {phase === "result" && (
+                {step === "result" && (
                     <div className="space-y-4">
-                        {pairs.map((pair, index) => (
-                            <Card key={index} className="overflow-hidden">
+                        {pairs.map((pair) => (
+                            <Card key={pair.id} className="overflow-hidden">
                                 <div className="flex">
                                     <div className="flex-1 bg-emerald-50 p-4 text-center font-medium text-emerald-900">
-                                        {pair[0].name}
+                                        {pair.player1.name}
                                     </div>
                                     <div className="flex items-center justify-center bg-slate-100 px-2 text-slate-400">
                                         vs
                                     </div>
                                     <div className="flex-1 bg-blue-50 p-4 text-center font-medium text-blue-900">
-                                        {pair[1].name}
+                                        {pair.player2.name}
                                     </div>
                                 </div>
                             </Card>
                         ))}
 
-                        <div className="pt-4">
+                        <div className="fixed bottom-4 left-4 right-4 flex gap-2">
                             <Button
                                 variant="outline"
-                                className="w-full"
+                                className="flex-1 bg-white"
                                 onClick={() => {
                                     setTopPlayers([]);
-                                    setPhase("select-top");
+                                    setStep("select-top");
                                 }}
                             >
                                 Start Over
+                            </Button>
+                            <Button
+                                className="flex-1 bg-indigo-600 hover:bg-indigo-700"
+                                onClick={() => {
+                                    startTournament('balanced', pairs);
+                                    router.push("/tournament");
+                                }}
+                            >
+                                Start Tournament
                             </Button>
                         </div>
                     </div>
