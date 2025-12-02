@@ -33,20 +33,20 @@ export default function Home() {
       <div className="w-full max-w-md space-y-8 text-center">
         <div className="space-y-2">
           <h1 className="text-4xl font-bold tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-emerald-400">
-            Padel Manager
+            Comunión De Gregorio Tournament
           </h1>
           <p className="text-slate-400">
-            Organize your tournaments with ease.
+            I Campeonato de Padel de Comunión De Gregorio
           </p>
         </div>
 
         {hasActiveTournament && (
           <div className="rounded-lg border border-emerald-500/50 bg-emerald-950/30 p-4">
-            <h3 className="mb-2 font-semibold text-emerald-400">Active Tournament Found</h3>
+            <h3 className="mb-2 font-semibold text-emerald-400">Torneo Activo</h3>
             <div className="flex gap-2">
               <Link href="/tournament" className="flex-1">
                 <Button className="w-full bg-emerald-600 hover:bg-emerald-700">
-                  <Play className="mr-2 h-4 w-4" /> Continue
+                  <Play className="mr-2 h-4 w-4" /> Continuar
                 </Button>
               </Link>
               <Button
@@ -69,9 +69,9 @@ export default function Home() {
               className="h-auto w-full flex-col gap-2 border-slate-800 bg-slate-900 p-6 hover:bg-slate-800 hover:text-slate-50"
             >
               <Users className="h-8 w-8 text-blue-400" />
-              <span className="text-lg font-semibold">Manage Players</span>
+              <span className="text-lg font-semibold">Gestionar Jugadores</span>
               <span className="text-xs text-slate-400">
-                Add or remove players
+                Añadir o eliminar jugadores
               </span>
             </Button>
           </Link>
@@ -82,7 +82,7 @@ export default function Home() {
             </div>
             <div className="relative flex justify-center text-xs uppercase">
               <span className="bg-slate-950 px-2 text-slate-500">
-                Start New Tournament
+                Iniciar nuevo torneo
               </span>
             </div>
           </div>
@@ -92,9 +92,9 @@ export default function Home() {
             onClick={() => handleStartNew("/captains")}
           >
             <Shield className="h-8 w-8" />
-            <span className="text-lg font-semibold">Captains Mode</span>
+            <span className="text-lg font-semibold">Modo Capitanes</span>
             <span className="text-xs opacity-80">
-              Captains draft their teams
+              Los capitanes forman sus equipos
             </span>
           </Button>
 
@@ -103,9 +103,9 @@ export default function Home() {
             onClick={() => handleStartNew("/balanced")}
           >
             <Shuffle className="h-8 w-8" />
-            <span className="text-lg font-semibold">Balanced Mode</span>
+            <span className="text-lg font-semibold"> Modo Balanceado</span>
             <span className="text-xs opacity-80">
-              Top players paired with others
+              Los mejores jugadores se pegan con otros
             </span>
           </Button>
         </div>

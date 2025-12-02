@@ -197,11 +197,11 @@ export default function TournamentPage() {
             <div className="mx-auto max-w-4xl space-y-6">
                 <div className="flex items-center justify-between">
                     <h1 className="text-xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-emerald-400">
-                        {mode === 'captain' ? 'Team Matchups' : 'Tournament Bracket'}
+                        {mode === 'captain' ? 'Enfrentamientos de Equipos' : 'Cuadro del Torneo'}
                     </h1>
                     <Link href="/">
                         <Button variant="ghost" size="sm" className="text-slate-400 hover:text-white">
-                            <ArrowLeft className="mr-2 h-4 w-4" /> Exit
+                            <ArrowLeft className="mr-2 h-4 w-4" /> Salir
                         </Button>
                     </Link>
                 </div>
@@ -210,21 +210,21 @@ export default function TournamentPage() {
                     <Card className="bg-slate-900 border-slate-800 mb-8">
                         <CardContent className="p-6">
                             <div className="flex justify-between items-center text-3xl font-bold">
-                                <div className="text-emerald-400">Team 1: {team1Wins}</div>
+                                <div className="text-emerald-400">Equipo 1: {team1Wins}</div>
                                 <div className="text-slate-600">-</div>
-                                <div className="text-blue-400">Team 2: {team2Wins}</div>
+                                <div className="text-blue-400">Equipo 2: {team2Wins}</div>
                             </div>
                             {matches.length > 0 && matches.every(m => m.winner) && (
                                 <div className="mt-6 text-center animate-in zoom-in duration-500">
                                     <h2 className="text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 to-amber-600">
-                                        {team1Wins > team2Wins ? "Team 1 Wins!" : team2Wins > team1Wins ? "Team 2 Wins!" : "It's a Draw!"}
+                                        {team1Wins > team2Wins ? "¡Gana el Equipo 1!" : team2Wins > team1Wins ? "¡Gana el Equipo 2!" : "¡Es un Empate!"}
                                     </h2>
                                     <Link href="/">
                                         <Button
                                             variant="outline"
                                             className="mt-4 text-slate-900 hover:bg-slate-100"
                                         >
-                                            Back to Home
+                                            Volver al Inicio
                                         </Button>
                                     </Link>
                                 </div>
@@ -238,7 +238,7 @@ export default function TournamentPage() {
                         <CardContent className="flex flex-col items-center justify-center p-8 space-y-4">
                             <Trophy className="h-16 w-16 text-yellow-100" />
                             <div className="text-center">
-                                <h2 className="text-2xl font-bold">Champions!</h2>
+                                <h2 className="text-2xl font-bold">¡Campeones!</h2>
                                 <p className="text-xl mt-2">{winner.player1.name} & {winner.player2.name}</p>
                             </div>
                             <Link href="/">
@@ -246,7 +246,7 @@ export default function TournamentPage() {
                                     variant="outline"
                                     className="mt-4 text-slate-900 hover:bg-slate-100"
                                 >
-                                    Back to Home
+                                    Volver al Inicio
                                 </Button>
                             </Link>
                         </CardContent>
@@ -258,7 +258,7 @@ export default function TournamentPage() {
                         {matches.map((match, index) => (
                             <Card key={match.id} className="bg-slate-900 border-slate-800">
                                 <div className="p-2 text-center text-xs text-slate-500 font-mono uppercase tracking-widest border-b border-slate-800">
-                                    Match {index + 1}
+                                    Partido {index + 1}
                                 </div>
                                 <div className="flex flex-col divide-y divide-slate-800">
                                     {/* Player 1 (Team 1) */}
@@ -272,13 +272,13 @@ export default function TournamentPage() {
                                         onClick={() => {
                                             if (!match.pair1) return;
                                             if (match.winner && match.winner.id !== match.pair1.id) {
-                                                if (!confirm("Change winner?")) return;
+                                                if (!confirm("¿Cambiar ganador?")) return;
                                             }
                                             advanceWinner(match.id, match.pair1);
                                         }}
                                     >
                                         <span className="text-sm font-medium">
-                                            {match.pair1 ? `${match.pair1.player1.name}/${match.pair1.player2.name}` : "Bye"}
+                                            {match.pair1 ? `${match.pair1.player1.name}/${match.pair1.player2.name}` : "Pase"}
                                         </span>
                                         {match.winner?.id === match.pair1?.id && <Check className="h-4 w-4" />}
                                     </button>
@@ -294,13 +294,13 @@ export default function TournamentPage() {
                                         onClick={() => {
                                             if (!match.pair2) return;
                                             if (match.winner && match.winner.id !== match.pair2.id) {
-                                                if (!confirm("Change winner?")) return;
+                                                if (!confirm("¿Cambiar ganador?")) return;
                                             }
                                             advanceWinner(match.id, match.pair2);
                                         }}
                                     >
                                         <span className="text-sm font-medium">
-                                            {match.pair2 ? `${match.pair2.player1.name}/${match.pair2.player2.name}` : "Bye"}
+                                            {match.pair2 ? `${match.pair2.player1.name}/${match.pair2.player2.name}` : "Pase"}
                                         </span>
                                         {match.winner?.id === match.pair2?.id && <Check className="h-4 w-4" />}
                                     </button>
@@ -313,7 +313,7 @@ export default function TournamentPage() {
                                             className="h-6 w-6 rounded-full bg-slate-700 hover:bg-red-600 hover:text-white border border-slate-600 shadow-lg"
                                             onClick={(e) => {
                                                 e.stopPropagation();
-                                                if (confirm("Reset match?")) undoMatchWinner(match.id);
+                                                if (confirm("¿Reiniciar partido?")) undoMatchWinner(match.id);
                                             }}
                                         >
                                             <RotateCcw className="h-3 w-3" />
@@ -328,9 +328,9 @@ export default function TournamentPage() {
                         {roundIndices.map((roundIdx) => (
                             <div key={roundIdx} className="flex min-w-[250px] flex-col gap-4 justify-around">
                                 <h3 className="text-center font-semibold text-slate-500 uppercase tracking-wider text-xs mb-4">
-                                    {roundIdx === roundIndices[roundIndices.length - 1] ? "Finals" :
-                                        roundIdx === roundIndices[roundIndices.length - 2] ? "Semi-Finals" :
-                                            `Round ${roundIdx + 1}`}
+                                    {roundIdx === roundIndices[roundIndices.length - 1] ? "Final" :
+                                        roundIdx === roundIndices[roundIndices.length - 2] ? "Semifinales" :
+                                            `Ronda ${roundIdx + 1}`}
                                 </h3>
                                 {rounds[roundIdx].map((match) => (
                                     <Card key={match.id} className="bg-slate-900 border-slate-800 relative">
@@ -346,7 +346,7 @@ export default function TournamentPage() {
                                                 onClick={() => {
                                                     if (!match.pair1) return;
                                                     if (match.winner && match.winner.id !== match.pair1.id) {
-                                                        if (!confirm("Change winner? This will reset subsequent matches.")) return;
+                                                        if (!confirm("¿Cambiar ganador? Esto reiniciará los partidos siguientes.")) return;
                                                     }
                                                     advanceWinner(match.id, match.pair1);
                                                 }}
@@ -357,7 +357,7 @@ export default function TournamentPage() {
                                                             {match.pair1.player1.name}/{match.pair1.player2.name}
                                                             {match.pair1.isCaptainPair && <Crown className="inline ml-1 w-3 h-3 text-yellow-500" />}
                                                         </>
-                                                    ) : "Bye"}
+                                                    ) : "Pase"}
                                                 </span>
                                                 {match.winner?.id === match.pair1?.id && <Check className="h-4 w-4" />}
                                             </button>
@@ -373,7 +373,7 @@ export default function TournamentPage() {
                                                 onClick={() => {
                                                     if (!match.pair2) return;
                                                     if (match.winner && match.winner.id !== match.pair2.id) {
-                                                        if (!confirm("Change winner? This will reset subsequent matches.")) return;
+                                                        if (!confirm("¿Cambiar ganador? Esto reiniciará los partidos siguientes.")) return;
                                                     }
                                                     advanceWinner(match.id, match.pair2);
                                                 }}
@@ -384,7 +384,7 @@ export default function TournamentPage() {
                                                             {match.pair2.player1.name}/{match.pair2.player2.name}
                                                             {match.pair2.isCaptainPair && <Crown className="h-3 w-3 text-yellow-500" />}
                                                         </>
-                                                    ) : "Bye"}
+                                                    ) : "Pase"}
                                                 </span>
                                                 {match.winner?.id === match.pair2?.id && <Check className="h-4 w-4" />}
                                             </button>

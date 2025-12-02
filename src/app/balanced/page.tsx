@@ -73,12 +73,12 @@ export default function BalancedPage() {
     if (players.length < 4) {
         return (
             <div className="flex min-h-screen flex-col items-center justify-center p-4 text-center">
-                <h1 className="mb-4 text-xl font-bold">Not enough players</h1>
+                <h1 className="mb-4 text-xl font-bold">No hay suficientes jugadores</h1>
                 <p className="mb-8 text-slate-500">
-                    You need at least 4 players to start.
+                    Necesitas al menos 4 jugadores para comenzar.
                 </p>
                 <Link href="/players">
-                    <Button>Go to Players</Button>
+                    <Button>Ir a Jugadores</Button>
                 </Link>
             </div>
         );
@@ -89,12 +89,12 @@ export default function BalancedPage() {
             <div className="mx-auto max-w-md space-y-6">
                 <div className="flex items-center justify-between">
                     <h1 className="text-xl font-bold text-slate-900">
-                        {step === "select-top" && `Select Top ${requiredTopCount} Players`}
-                        {step === "result" && "Balanced Pairs"}
+                        {step === "select-top" && `Selecciona los ${requiredTopCount} Mejores Jugadores`}
+                        {step === "result" && "Parejas Balanceadas"}
                     </h1>
                     <Link href="/">
                         <Button variant="ghost" size="sm">
-                            Quit
+                            Salir
                         </Button>
                     </Link>
                 </div>
@@ -102,7 +102,7 @@ export default function BalancedPage() {
                 {step === "select-top" && (
                     <>
                         <p className="text-sm text-slate-500">
-                            Select the best players. They will be paired with the others.
+                            Selecciona a los mejores jugadores. Serán emparejados con los demás.
                         </p>
                         <div className="grid grid-cols-2 gap-2">
                             {players.map((player) => {
@@ -133,7 +133,7 @@ export default function BalancedPage() {
                                 disabled={topPlayers.length !== requiredTopCount}
                                 onClick={generatePairs}
                             >
-                                Generate Pairs
+                                Generar Parejas
                             </Button>
                         </div>
                     </>
@@ -175,7 +175,7 @@ export default function BalancedPage() {
                                     router.push("/tournament");
                                 }}
                             >
-                                Start Tournament
+                                Comenza Torneo
                             </Button>
                         </div>
                     </div>

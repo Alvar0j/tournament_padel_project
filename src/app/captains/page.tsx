@@ -73,7 +73,7 @@ export default function CaptainsPage() {
 
             // Enforce same team
             if (selectedForPair.teamId !== teamId) {
-                alert("You can only pair players from the same team!");
+                alert("¡Solo puedes emparejar jugadores del mismo equipo!");
                 return;
             }
 
@@ -119,12 +119,12 @@ export default function CaptainsPage() {
     if (players.length < 4) {
         return (
             <div className="flex min-h-screen flex-col items-center justify-center p-4 text-center">
-                <h1 className="mb-4 text-xl font-bold">Not enough players</h1>
+                <h1 className="mb-4 text-xl font-bold">No hay suficientes jugadores</h1>
                 <p className="mb-8 text-slate-500">
-                    You need at least 4 players to start.
+                    Necesitas al menos 4 jugadores para comenzar.
                 </p>
                 <Link href="/players">
-                    <Button>Go to Players</Button>
+                    <Button>Ir a Jugadores</Button>
                 </Link>
             </div>
         );
@@ -135,13 +135,13 @@ export default function CaptainsPage() {
             <div className="mx-auto max-w-md space-y-6">
                 <div className="flex items-center justify-between">
                     <h1 className="text-xl font-bold text-slate-900">
-                        {phase === "select-captains" && "Select 2 Captains"}
-                        {phase === "draft" && "Draft Teams"}
-                        {phase === "form-pairs" && "Form Pairs"}
+                        {phase === "select-captains" && "Selecciona 2 Capitanes"}
+                        {phase === "draft" && "Elegir Equipos"}
+                        {phase === "form-pairs" && "Formar Parejas"}
                     </h1>
                     <Link href="/">
                         <Button variant="ghost" size="sm">
-                            Quit
+                            Salir
                         </Button>
                     </Link>
                 </div>
@@ -188,7 +188,7 @@ export default function CaptainsPage() {
                         <div className="grid grid-cols-2 gap-4 text-center">
                             <Card className={cn("border-2", currentTurn === 0 ? "border-indigo-500" : "border-transparent")}>
                                 <CardHeader className="p-4">
-                                    <CardTitle className="text-sm">Team {captains[0].name}</CardTitle>
+                                    <CardTitle className="text-sm">Equipo {captains[0].name}</CardTitle>
                                 </CardHeader>
                                 <CardContent className="p-4 pt-0 text-xs">
                                     {team1.map((p) => (
@@ -198,7 +198,7 @@ export default function CaptainsPage() {
                             </Card>
                             <Card className={cn("border-2", currentTurn === 1 ? "border-indigo-500" : "border-transparent")}>
                                 <CardHeader className="p-4">
-                                    <CardTitle className="text-sm">Team {captains[1].name}</CardTitle>
+                                    <CardTitle className="text-sm">Equipo {captains[1].name}</CardTitle>
                                 </CardHeader>
                                 <CardContent className="p-4 pt-0 text-xs">
                                     {team2.map((p) => (
@@ -243,7 +243,7 @@ export default function CaptainsPage() {
                     <div className="space-y-8">
                         {/* Team 1 */}
                         <div className="space-y-2">
-                            <h3 className="font-semibold text-indigo-900">Team {captains[0].name}</h3>
+                            <h3 className="font-semibold text-indigo-900">Equipo {captains[0].name}</h3>
                             <div className="grid grid-cols-2 gap-2">
                                 {team1.map(p => {
                                     const paired = isPaired(p, team1Pairs);
@@ -284,7 +284,7 @@ export default function CaptainsPage() {
 
                         {/* Team 2 */}
                         <div className="space-y-2">
-                            <h3 className="font-semibold text-purple-900">Team {captains[1].name}</h3>
+                            <h3 className="font-semibold text-purple-900">Equipo {captains[1].name}</h3>
                             <div className="grid grid-cols-2 gap-2">
                                 {team2.map(p => {
                                     const paired = isPaired(p, team2Pairs);
@@ -333,7 +333,7 @@ export default function CaptainsPage() {
                                 }
                                 onClick={finalizeTournament}
                             >
-                                Start Tournament <ArrowRight className="ml-2 w-4 h-4" />
+                                Comenza Torneo <ArrowRight className="ml-2 w-4 h-4" />
                             </Button>
                         </div>
                     </div>
