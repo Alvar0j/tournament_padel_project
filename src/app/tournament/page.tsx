@@ -413,94 +413,114 @@ export default function TournamentPage() {
                     </div>
                 ) : (
                     <div className="overflow-x-auto pb-8">
-                        <div className="flex gap-4 w-max mx-auto px-4 min-h-[600px]">
-                            {roundIndices.map((roundIdx) => (
-                                <div key={roundIdx} className="flex min-w-[250px] flex-col justify-around">
-                                    <h3 className="text-center font-semibold text-slate-500 uppercase tracking-wider text-xs mb-4">
-                                        {roundIdx === roundIndices[roundIndices.length - 1] ? "Final" :
-                                            roundIdx === roundIndices[roundIndices.length - 2] ? "Semifinales" :
-                                                `Ronda ${roundIdx + 1}`}
-                                    </h3>
-                                    {rounds[roundIdx].map((match) => (
-                                        <Card key={match.id} className="bg-slate-900 border-slate-800 relative">
-                                            <div className="flex flex-col divide-y divide-slate-800">
-                                                {/* Player 1 */}
-                                                <button
-                                                    className={cn(
-                                                        "flex items-center justify-between p-3 transition-colors",
-                                                        match.winner?.id === match.pair1?.id ? "bg-emerald-900/30 text-emerald-400" : "hover:bg-slate-800 text-white",
-                                                        !match.pair1 && "opacity-50 cursor-default"
-                                                    )}
-                                                    disabled={!match.pair1 || !match.pair2}
-                                                    onClick={() => {
-                                                        if (!match.pair1) return;
-                                                        if (match.winner && match.winner.id !== match.pair1.id) {
-                                                            if (!confirm("¿Cambiar ganador? Esto reiniciará los partidos siguientes.")) return;
-                                                        }
-                                                        advanceWinner(match.id, match.pair1);
-                                                    }}
-                                                >
-                                                    <span className="text-sm font-medium ">
-                                                        {match.pair1 ? (
-                                                            <>
-                                                                {match.pair1.player1.name}/{match.pair1.player2.name}
-                                                                {match.pair1.isCaptainPair && <Crown className="inline ml-1 w-3 h-3 text-yellow-500" />}
-                                                            </>
-                                                        ) : "Pase"}
-                                                    </span>
-                                                    {match.winner?.id === match.pair1?.id && <Check className="h-4 w-4" />}
-                                                </button>
+                        <div className="flex w-max mx-auto px-4 min-h-[600px]">
+                            {roundIndices.map((roundIdx) => {
+                                const baseHeight = 130; // Height of card + gap
+                                const cardHeight = 96; // h-24 = 96px
 
-                                                {/* Player 2 */}
-                                                <button
-                                                    className={cn(
-                                                        "flex items-center justify-between p-3 transition-colors",
-                                                        match.winner?.id === match.pair2?.id ? "bg-emerald-900/30 text-emerald-400" : "hover:bg-slate-800 text-white",
-                                                        !match.pair2 && "opacity-50 cursor-default"
-                                                    )}
-                                                    disabled={!match.pair1 || !match.pair2}
-                                                    onClick={() => {
-                                                        if (!match.pair2) return;
-                                                        if (match.winner && match.winner.id !== match.pair2.id) {
-                                                            if (!confirm("¿Cambiar ganador? Esto reiniciará los partidos siguientes.")) return;
-                                                        }
-                                                        advanceWinner(match.id, match.pair2);
-                                                    }}
-                                                >
-                                                    <span className="flex items-center gap-2 font-medium">
-                                                        {match.pair2 ? (
-                                                            <>
-                                                                {match.pair2.player1.name}/{match.pair2.player2.name}
-                                                                {match.pair2.isCaptainPair && <Crown className="h-3 w-3 text-yellow-500" />}
-                                                            </>
-                                                        ) : "Pase"}
-                                                    </span>
-                                                    {match.winner?.id === match.pair2?.id && <Check className="h-4 w-4" />}
-                                                </button>
-                                            </div>
+                                return (
+                                    <div key={roundIdx} className="min-w-[250px] mr-16">
+                                        <h3 className="text-center font-semibold text-slate-500 uppercase tracking-wider text-xs mb-4 h-4">
+                                            {roundIdx === roundIndices[roundIndices.length - 1] ? "Final" :
+                                                roundIdx === roundIndices[roundIndices.length - 2] ? "Semifinales" :
+                                                    `Ronda ${roundIdx + 1}`}
+                                        </h3>
+                                        <div>
+                                            {rounds[roundIdx].map((match, i) => {
+                                                // Calculate dynamic margin top
+                                                // First item: (2^r - 1) * (H/2)
+                                                // Others: (2^r * H) - h
+                                                const firstMargin = (Math.pow(2, roundIdx) - 1) * (baseHeight / 2);
+                                                const gapMargin = (Math.pow(2, roundIdx) * baseHeight) - cardHeight;
+                                                const marginTop = i === 0 ? firstMargin : gapMargin;
 
-                                            {/* Undo Button */}
-                                            {match.winner && (
-                                                <div className="absolute -right-2 -top-2">
-                                                    <Button
-                                                        size="icon"
-                                                        variant="outline"
-                                                        className="h-6 w-6 rounded-full bg-slate-700 hover:bg-red-600 hover:text-white border border-slate-600 shadow-lg"
-                                                        onClick={(e) => {
-                                                            e.stopPropagation();
-                                                            if (confirm("Are you sure you want to undo this match result?")) {
-                                                                undoMatchWinner(match.id);
-                                                            }
-                                                        }}
+                                                return (
+                                                    <Card
+                                                        key={match.id}
+                                                        className="bg-slate-900 border-slate-800 relative h-24 flex items-center"
+                                                        style={{ marginTop: `${marginTop}px` }}
                                                     >
-                                                        <RotateCcw className="h-3 w-3" />
-                                                    </Button>
-                                                </div>
-                                            )}
-                                        </Card>
-                                    ))}
-                                </div>
-                            ))}
+                                                        <div className="flex flex-col divide-y divide-slate-800 w-full">
+                                                            {/* Player 1 */}
+                                                            <button
+                                                                className={cn(
+                                                                    "flex items-center justify-between p-3 transition-colors",
+                                                                    match.winner?.id === match.pair1?.id ? "bg-emerald-900/30 text-emerald-400" : "hover:bg-slate-800 text-white",
+                                                                    !match.pair1 && "opacity-50 cursor-default"
+                                                                )}
+                                                                disabled={!match.pair1 || !match.pair2}
+                                                                onClick={() => {
+                                                                    if (!match.pair1) return;
+                                                                    if (match.winner && match.winner.id !== match.pair1.id) {
+                                                                        if (!confirm("¿Cambiar ganador? Esto reiniciará los partidos siguientes.")) return;
+                                                                    }
+                                                                    advanceWinner(match.id, match.pair1);
+                                                                }}
+                                                            >
+                                                                <span className="text-sm font-medium ">
+                                                                    {match.pair1 ? (
+                                                                        <>
+                                                                            {match.pair1.player1.name}/{match.pair1.player2.name}
+                                                                            {match.pair1.isCaptainPair && <Crown className="inline ml-1 w-3 h-3 text-yellow-500" />}
+                                                                        </>
+                                                                    ) : "Pase"}
+                                                                </span>
+                                                                {match.winner?.id === match.pair1?.id && <Check className="h-4 w-4" />}
+                                                            </button>
+
+                                                            {/* Player 2 */}
+                                                            <button
+                                                                className={cn(
+                                                                    "flex items-center justify-between p-3 transition-colors",
+                                                                    match.winner?.id === match.pair2?.id ? "bg-emerald-900/30 text-emerald-400" : "hover:bg-slate-800 text-white",
+                                                                    !match.pair2 && "opacity-50 cursor-default"
+                                                                )}
+                                                                disabled={!match.pair1 || !match.pair2}
+                                                                onClick={() => {
+                                                                    if (!match.pair2) return;
+                                                                    if (match.winner && match.winner.id !== match.pair2.id) {
+                                                                        if (!confirm("¿Cambiar ganador? Esto reiniciará los partidos siguientes.")) return;
+                                                                    }
+                                                                    advanceWinner(match.id, match.pair2);
+                                                                }}
+                                                            >
+                                                                <span className="flex items-center gap-2 font-medium">
+                                                                    {match.pair2 ? (
+                                                                        <>
+                                                                            {match.pair2.player1.name}/{match.pair2.player2.name}
+                                                                            {match.pair2.isCaptainPair && <Crown className="h-3 w-3 text-yellow-500" />}
+                                                                        </>
+                                                                    ) : "Pase"}
+                                                                </span>
+                                                                {match.winner?.id === match.pair2?.id && <Check className="h-4 w-4" />}
+                                                            </button>
+                                                        </div>
+
+                                                        {/* Undo Button */}
+                                                        {match.winner && (
+                                                            <div className="absolute -right-2 -top-2">
+                                                                <Button
+                                                                    size="icon"
+                                                                    variant="outline"
+                                                                    className="h-6 w-6 rounded-full bg-slate-700 hover:bg-red-600 hover:text-white border border-slate-600 shadow-lg"
+                                                                    onClick={(e) => {
+                                                                        e.stopPropagation();
+                                                                        if (confirm("Are you sure you want to undo this match result?")) {
+                                                                            undoMatchWinner(match.id);
+                                                                        }
+                                                                    }}
+                                                                >
+                                                                    <RotateCcw className="h-3 w-3" />
+                                                                </Button>
+                                                            </div>
+                                                        )}
+                                                    </Card>
+                                                );
+                                            })}
+                                        </div>
+                                    </div>
+                                );
+                            })}
                         </div>
                     </div>
                 )}
