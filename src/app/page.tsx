@@ -66,11 +66,11 @@ export default function Home() {
           <Link href="/players" className="w-full">
             <Button
               variant="outline"
-              className="h-auto w-full flex-col gap-2 border-slate-800 bg-slate-900 p-6 hover:bg-slate-800 hover:text-slate-50"
+              className="h-auto w-full flex-col gap-2 border-slate-800 bg-slate-900 p-6 text-slate-50 hover:bg-slate-800 hover:text-slate-50"
             >
               <Users className="h-8 w-8 text-blue-400" />
               <span className="text-lg font-semibold">Gestionar Jugadores</span>
-              <span className="text-xs text-slate-400">
+              <span className="text-xs opacity-80">
                 Añadir o eliminar jugadores
               </span>
             </Button>

@@ -177,7 +177,7 @@ export default function CaptainsPage() {
                                 disabled={captains.length !== 2}
                                 onClick={startDraft}
                             >
-                                Start Draft
+                                Comienza el Draft
                             </Button>
                         </div>
                     </>
@@ -210,7 +210,7 @@ export default function CaptainsPage() {
 
                         <div className="space-y-2">
                             <h3 className="text-center text-sm font-medium text-slate-500">
-                                {currentTurn === 0 ? captains[0].name : captains[1].name}'s Turn
+                                Turno de {currentTurn === 0 ? captains[0].name : captains[1].name}
                             </h3>
                             <div className="grid grid-cols-2 gap-2">
                                 {availablePlayers.map((player) => (
@@ -232,7 +232,7 @@ export default function CaptainsPage() {
                                     className="w-full"
                                     onClick={() => setPhase("form-pairs")}
                                 >
-                                    Next: Form Pairs
+                                    Siguiente: Formar las parejas
                                 </Button>
                             </div>
                         )}
@@ -333,7 +333,7 @@ export default function CaptainsPage() {
                                 }
                                 onClick={finalizeTournament}
                             >
-                                Comenza Torneo <ArrowRight className="ml-2 w-4 h-4" />
+                                Comienza el Torneo <ArrowRight className="ml-2 w-4 h-4" />
                             </Button>
                         </div>
                     </div>
