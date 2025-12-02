@@ -20,6 +20,7 @@ export interface Match {
     winner: Pair | null;
     nextMatchId?: string;
     nextMatchSlot?: 1 | 2; // 1 for pair1, 2 for pair2
+    score?: { team1: number; team2: number };
 }
 
 interface TournamentState {
@@ -30,6 +31,7 @@ interface TournamentState {
     setMatches: (matches: Match[]) => void;
     startTournament: (mode: 'captain' | 'balanced', pairs: Pair[]) => void;
     advanceWinner: (matchId: string, winnerPair: Pair) => void;
+    updateMatchScore: (matchId: string, score: { team1: number; team2: number }) => void;
     undoMatchWinner: (matchId: string) => void;
     resetTournament: () => void;
 }
@@ -44,6 +46,12 @@ export const useTournamentStore = create<TournamentState>()(
             setMatches: (matches) => set({ matches }),
             startTournament: (mode, pairs) => set({ mode, pairs, matches: [] }),
             resetTournament: () => set({ mode: null, pairs: [], matches: [] }),
+            updateMatchScore: (matchId, score) =>
+                set((state) => ({
+                    matches: state.matches.map((m) =>
+                        m.id === matchId ? { ...m, score } : m
+                    ),
+                })),
             advanceWinner: (matchId, winnerPair) =>
                 set((state) => {
                     const currentMatch = state.matches.find((m) => m.id === matchId);
